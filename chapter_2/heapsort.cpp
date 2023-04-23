@@ -118,6 +118,8 @@ bool is_Sorted(std::vector<int> &v){
     return true;
 }
 
+/* priority queue   */
+
 int main(void){
     std::random_device rd; // seeder
     std::mt19937 gen(rd()); 
