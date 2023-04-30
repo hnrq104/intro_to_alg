@@ -38,6 +38,63 @@ void countingsort(std::vector<size_t> &v){
     v = b;
 }
 
+
+// void radixsort(std::vector<size_t> &v){}
+
+struct no{
+    double num;
+    no *prox;
+    
+    no(double n){
+        num = n;
+        prox = nullptr;
+    }
+};
+
+
+void insere_no(no *cbc, double n){
+    no *ant = cbc;
+    no *ptr = ant->prox;
+    while(ptr != nullptr && ptr->num <= n){
+        ant = ptr;
+        ptr = ptr->prox;
+    }
+
+    no *novo = new no(n);
+    novo->prox = ptr;
+    ant->prox = novo;
+
+    return;
+}
+
+//burro
+void bucketsort(std::vector<double> &v,size_t n){
+    std::vector<no*> nos;
+    for(size_t i = 0; i < n; i++){
+        nos.push_back(new no(-1));
+    }
+
+    for(size_t i = 0; i < v.size(); i++){
+        int bucket = size_t (v.at(i)/(1./nos.size()));
+        insere_no(nos.at(bucket),v.at(i));
+    }
+
+    std::vector<double> sorted;
+    for(size_t i = 0; i < nos.size(); i++){
+        no *ptr = nos.at(i)->prox;
+        while(ptr != nullptr){
+            sorted.push_back(ptr->num);
+            ptr = ptr->prox;
+        }
+    }
+
+    v = sorted;
+
+    
+}
+
+
+
 template<typename T>
 bool isSorted(std::vector<T> &comparable){
     for(size_t i = 1; i < comparable.size(); i++){
@@ -57,5 +114,13 @@ int main(void){
         std::cout << v.at(i) << " ";
     }
     std::cout << std::endl;
+    
+    std::vector<double> d;
+    for(int i = 1; i < 100; i++){
+        d.push_back(1 - i/100.);
+    }
+    
+    
+    
     return 0;
 }
