@@ -115,10 +115,6 @@ int main(void){
     }
     std::cout << std::endl;
     
-    std::vector<double> d;
-    for(int i = 1; i < 100; i++){
-        d.push_back(1 - i/100.);
-    }
     
     
     
