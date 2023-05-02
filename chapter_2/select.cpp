@@ -56,9 +56,13 @@ int select(std::vector<int> &v, int start, int end, int index){
     }
 
     //median of last group stands at (size_of_last - 1)/2
+<<<<<<< HEAD
     if(size_of_last){
         medians.push_back(v.at(5*n_groups_5 + (size_of_last-1)/2));
     }
+=======
+    medians.push_back(v.at(5*n_groups_5 + (size_of_last-1)/2));
+>>>>>>> refs/remotes/origin/main
     
     int m = select(medians,0,medians.size(),(medians.size()-1)/2);
     
@@ -71,10 +75,15 @@ int select(std::vector<int> &v, int start, int end, int index){
         }
     }
 
+<<<<<<< HEAD
     if(size_of_last){
         if(v.at(5*n_groups_5 + (size_of_last-1)/2) == m){
             p = 5*n_groups_5 + (size_of_last-1)/2;
         }
+=======
+    if(v.at(5*n_groups_5 + (size_of_last-1)/2) == m){
+        p = 5*n_groups_5 + (size_of_last-1)/2;
+>>>>>>> refs/remotes/origin/main
     }
 
     //found position of given median
@@ -92,6 +101,7 @@ int select(std::vector<int> &v, int start, int end, int index){
 }
 
 
+<<<<<<< HEAD
 int main(void){
     
     std::vector<int> v{1,3,0,5,2,3,6,1,2,12,125,16,20};
@@ -99,6 +109,14 @@ int main(void){
     //its alive
 
     std::cout << select(v,0,v.size(),1) << std::endl;
+=======
+
+
+int main(void){
+    std::vector<int> v{0,5,4,2,1,6,7,10,8,9,3};
+    //its alive
+    std::cout << select(v,0,v.size(),10) << std::endl;
+>>>>>>> refs/remotes/origin/main
 
     return 0;
 }
