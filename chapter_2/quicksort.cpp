@@ -116,3 +116,7 @@ int main(void){
 
     return 0;
 }
+
+/*
+https://math.mit.edu/~goemans/18310S15/rand_median_quicksort-notes.pdf
+*/
