@@ -71,6 +71,47 @@ int hash11(int m, int k){
     return int(m*point);
 }
 
+struct open_addressing{
+    std::vector<int*> keys;
+
+    open_addressing(int n){
+        keys.resize(n);
+        for(int i = 0; i < n; i++){
+            keys.at(i) == nullptr;
+        }
+    }
+
+    int h(int k, int probe){
+        //do later
+    }
+
+    int hash_insert(int k){
+        for(int i = 0; i < keys.size(); i++){
+            int j = h(k,i);
+            if(keys.at(j) == nullptr){
+                keys.at(j) = new int(k);
+                return j;
+            }
+        }
+
+        throw std::overflow_error("hash overflow");
+    }
+
+    int* hash_search(int k){
+        for(int i = 0; i < keys.size(); i++){
+            int j = h(k,i);
+            if(*keys.at(j) == k){
+                return keys.at(j);
+            }
+            i++;
+        }
+
+        return nullptr;
+    }
+
+
+};
+
 int main(void){
     std::cout << hash11(1000,61) << std::endl;
     std::cout << hash11(1000,62) << std::endl;
