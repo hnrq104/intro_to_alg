@@ -66,7 +66,7 @@ double square_root(double x,int terms){
 }
 
 int hash11(int m, int k){
-    double a = square_root(5,5);
+    double a = (square_root(5,5) - 1)/2;
     double point = k*a - int(k*a);
     return int(m*point);
 }
