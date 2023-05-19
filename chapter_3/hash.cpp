@@ -81,6 +81,7 @@ struct open_addressing{
         }
     }
 
+    /*
     int h(int k, int probe){
         //do later
     }
@@ -109,8 +110,99 @@ struct open_addressing{
         return nullptr;
     }
 
+    */
 
 };
+
+struct obj{
+    char del;
+    int data;
+};
+
+
+struct open{
+    obj *vetor;
+    int size;
+
+    open(int m){
+        vetor = new obj[m];
+        for(int i = 0; i < m; i++){
+            obj ob;
+            ob.del = 0;
+            *(vetor + i) = ob; 
+        }
+    }
+
+    int h(int k){
+        return k; //something 
+    }
+
+    int linear_h(int k, int i){
+        return (h(k) + i)%size;
+    }
+
+    int quadratic_h(int k , int i, int c1, int c2){
+        return (h(k) + c1*i + c2*i*i)%size;
+    }
+
+
+    int dh1(int k){
+        return k;
+    }
+
+    int dh2(int k){
+        return 1 + k%(size - 1);
+    }
+
+    int d_hashing(int k, int i){
+        return (dh1(k) + i*dh2(k))%size;
+    }
+
+    int hashinsert_linear(int k){
+        for(int i = 0; i < size; i++){
+            int pos = linear_h(k,i);
+            obj* t = vetor + pos;
+            if(!t->del){
+                t->data = k;
+                return pos;
+            }
+        }
+
+        throw std::overflow_error("hash overflow");
+    }
+
+    int hashinsert_quadratic(int k,int c1, int c2){
+        for(int i = 0; i < size; i++){
+            int pos = quadratic_h(k,i,c1,c2);
+            obj* t = vetor + pos;
+            if(!t->del){
+                t->data = k;
+                return pos;
+            }
+        }
+
+        throw std::overflow_error("hash overflow");
+    }
+
+    int hashinsert_double(int k){
+        for(int i = 0; i < size; i++){
+            int pos = d_hashing(k,i);
+            obj* t = vetor + pos;
+            if(!t->del){
+                t->data = k;
+                return pos;
+            }
+        }
+
+        throw std::overflow_error("hash overflow");
+    }
+
+
+
+};
+
+
+
 
 int main(void){
     std::cout << hash11(1000,61) << std::endl;
@@ -118,7 +210,7 @@ int main(void){
     std::cout << hash11(1000,63) << std::endl;
     std::cout << hash11(1000,64) << std::endl;
     std::cout << hash11(1000,65) << std::endl;
-
+    
     // std::cout<< square_root(5,5)<<std::endl;
     return 0;
 }
