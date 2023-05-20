@@ -205,12 +205,11 @@ struct open{
 
 
 int main(void){
-    std::cout << hash11(1000,61) << std::endl;
-    std::cout << hash11(1000,62) << std::endl;
-    std::cout << hash11(1000,63) << std::endl;
-    std::cout << hash11(1000,64) << std::endl;
-    std::cout << hash11(1000,65) << std::endl;
     
+
+
+
+
     // std::cout<< square_root(5,5)<<std::endl;
     return 0;
 }
