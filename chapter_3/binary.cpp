@@ -125,7 +125,7 @@ fruta* tree_predecessor(fruta* ptr){
     return prev;
 }
 
-void transplant(fruta* &antigo, fruta* &trocado){
+void transplant(fruta* antigo, fruta* trocado){
     if(antigo->ant == nullptr){
         antigo = trocado;
     }
@@ -139,29 +139,139 @@ void transplant(fruta* &antigo, fruta* &trocado){
     if(trocado != nullptr){
         trocado->ant = antigo->ant;
     }
-
-    
 }
+
+void deletar(fruta* &del){
+    if(del->esq == nullptr){
+        transplant(del,del->dir);
+    }
+
+    else if(del->dir == nullptr){
+        transplant(del,del->esq);
+    }
+
+    else{
+        fruta* ptr = min(del->dir);
+        if(ptr->ant == del){
+            transplant(ptr,ptr->dir);
+            ptr->dir = del->dir;
+            ptr->dir->ant = del;
+        }
+
+        transplant(del,ptr);
+        ptr->esq = ptr->esq;
+        ptr->esq->ant = ptr; 
+    }
+}
+
+
 
 /*
 void elegant_walk(fruta *salada){
 }
 */
 
+
+struct verdura{
+    int dado;
+    verdura *left;
+    verdura *right;
+    verdura *succ;
+
+    verdura(int n){
+        dado = n;
+        left = nullptr;
+        right = nullptr;
+        succ = nullptr;
+    }
+};
+
+
+void ver_inser(verdura* &root, int n){
+    if(root == nullptr){
+        root = new verdura(n);
+        return;
+    }
+
+    verdura *antecessor = nullptr;
+    verdura *sucessor = nullptr;
+
+    verdura *ant_ptr = nullptr;
+    verdura *ptr = root;
+    while(ptr != nullptr){
+        ant_ptr = ptr;
+
+        if(n >= ptr->dado){
+            antecessor = ptr;
+            ptr = ptr->right;
+        }
+
+        else{ //n < ptr->dado
+            sucessor = ptr;
+            ptr = ptr->left;
+        }
+    }
+
+    ptr = new verdura(n);
+
+    if(n >= ant_ptr->dado){
+        ant_ptr->right = ptr;
+    }
+    else{
+        ant_ptr->left = ptr;
+    }
+
+    if(antecessor != nullptr){
+        verdura* suc_ant = antecessor->succ;
+        if(suc_ant == nullptr){
+            antecessor->succ = ptr;
+        }
+        else if(suc_ant->dado > n){
+            antecessor->succ = ptr;
+        }
+
+    }
+    ptr->succ = sucessor;
+}
+
+void print_suc(verdura *ptr){
+    if(ptr == nullptr) return;
+    print_suc(ptr->left);
+    std::cout << ptr->dado;
+    if(ptr->succ != nullptr){
+        std::cout << " - > "  << ptr->succ->dado;
+    }
+    std::cout << std::endl;
+    print_suc(ptr->right);
+}
+
+
 int main(void){
-    fruta* root = nullptr;
+    // fruta* root = nullptr;
 
-    inserir(root,10);
-    inserir(root,4);
-    inserir(root,5);
-    inserir(root,2);
-    inserir(root,3);
+    // inserir(root,10);
+    // inserir(root,4);
+    // inserir(root,5);
+    // inserir(root,2);
+    // inserir(root,3);
 
-    std::cout << "recursivo " << std::endl;
-    print(root);
+    // std::cout << "recursivo " << std::endl;
+    // print(root);
 
-    std::cout << "usando stack " << std::endl;
-    inorder_walk(root);
+    // std::cout << "usando stack " << std::endl;
+    // inorder_walk(root);
+
+    verdura* salad = nullptr;
+    ver_inser(salad, 3);
+    ver_inser(salad, 2);
+    ver_inser(salad, 1);
+    ver_inser(salad, 7);
+    ver_inser(salad, 4);
+    ver_inser(salad, 9);
+    ver_inser(salad, 5);
+
+    print_suc(salad);
+
 
     return 0;
 }   
