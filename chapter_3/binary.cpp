@@ -234,6 +234,24 @@ void ver_inser(verdura* &root, int n){
     ptr->succ = sucessor;
 }
 
+//busca é igual
+/*
+void ver_remov(int n){
+    acha antecessor durante a busca,
+    acha elemento
+
+    se elemento exitir,
+    e tiver filho esquerdo
+    acha verdadeiro antecessor
+
+    antecessor = verdadeiro antecessor
+    antecessor->sucessor = ptr->sucessor
+    
+    remove normalmente o elemento
+    acho melhor até trocar pelo esquerdo já que já o temos
+}
+*/
+
 void print_suc(verdura *ptr){
     if(ptr == nullptr) return;
     print_suc(ptr->left);
