@@ -28,28 +28,44 @@ struct redblack{
     }
 };
 
-void left_rotate(redblack* &ptr){
+void left_rotate(redblack* &root,redblack* ptr){
     redblack* y = ptr->right;
     ptr->right = y->left;
-    if(y->left != nullptr){
-        y->left->p = ptr;
-    }
     y->left = ptr;
+
     y->p = ptr->p;
+    if(ptr->p == nullptr){
+        root = y;
+    }
+    else if(ptr == ptr->p->left){
+        ptr->p->left = y;
+    }
+    else{
+        ptr->p->right = y;
+    }
+
     ptr->p = y;
-    ptr = y;
+    
 }
 
-void right_rotate(redblack* &ptr){
+void right_rotate(redblack* &root, redblack* ptr){
     redblack* x = ptr->left;
     ptr->left = x->right;
-    if(x->right != nullptr){
-        x->right->p = ptr;
-    }
     x->right = ptr;
+
     x->p = ptr->p;
+
+    if(ptr->p == nullptr){
+        root = x;
+    }
+    else if(ptr == ptr->p->left){
+        ptr->p->left = x;
+    }
+    else{
+        ptr->p->right = x;
+    }
+
     ptr->p = x;
-    ptr = x;
 }
 
 redblack::color col(redblack* ptr){
@@ -58,6 +74,55 @@ redblack::color col(redblack* ptr){
     }
     return ptr->cor;
 
+}
+
+
+void rb_insert_fixup(redblack* &root, redblack* z){
+    while(col(z->p) == redblack::RED){
+        if(z->p == z->p->p->left){
+            redblack* y = z->p->p->right;
+            if(col(y) == redblack::RED){
+                z->p->cor = redblack::BLACK;
+                y->cor = redblack::BLACK;
+                z->p->p->cor = redblack::RED;
+                z = z->p->p;
+            }
+
+            else{
+                if(z == z->p->right){
+                    z = z->p;
+                    left_rotate(root, z);
+                }
+
+                z->p->cor = redblack::BLACK;
+                z->p->p->cor = redblack::RED;
+                right_rotate(root,z->p->p);
+            }
+
+        }
+
+        else{
+            redblack* y = z->p->p->left;
+            if(col(y) == redblack::RED){
+                z->p->cor = redblack::BLACK;
+                y->cor = redblack::BLACK;
+                z->p->p->cor = redblack::RED;
+                z = z->p->p;
+            }
+
+            else{
+                if(z == z->p->left){
+                    z = z->p;
+                    right_rotate(root,z);
+                }
+                z->p->cor = redblack::BLACK;
+                z->p->p->cor = redblack::RED;
+                left_rotate(root,z->p->p);
+            }
+        }
+    }
+
+    root->cor = redblack::BLACK;
 }
 
 void rb_insert(redblack* &root, redblack* z){
@@ -72,12 +137,11 @@ void rb_insert(redblack* &root, redblack* z){
             x = x->right;
         }
     }
-
     z->p = y;
     if(y == nullptr){
         root = z;
     }
-
+    
     else if(z->key < y->key){
         y->left = z;
     }
@@ -87,10 +151,25 @@ void rb_insert(redblack* &root, redblack* z){
     }
     
     z->cor = redblack::RED;
+    z->left = nullptr;
+    z->right = nullptr;
 
-    //RB->INSERT FIXUP(T,Z)
+    rb_insert_fixup(root,z);
 }
 
+
+void rb_transplant(redblack* &root, redblack* u, redblack* v){
+    if(u->p == nullptr){
+        root = v;
+    }
+    else if(u == u->p->left){
+        u->p->left = v;
+    }
+    else{
+        u->p->right = v;
+    }
+    v->p = u->p;
+}
 
 
 int main(void){
