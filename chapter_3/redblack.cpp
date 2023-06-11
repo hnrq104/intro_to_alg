@@ -10,6 +10,8 @@ As written by Moses.
 */
 
 #include<bits/stdc++.h>
+
+
 struct redblack{    
     enum color{RED, BLACK};
     
@@ -170,6 +172,39 @@ void rb_transplant(redblack* &root, redblack* u, redblack* v){
     }
     v->p = u->p;
 }
+
+
+struct fruta{
+    int key;
+    fruta* esq;
+    fruta* dir;
+};
+
+fruta* insert_persistent(fruta* root, int k){
+    fruta* ptr = root;
+    if(ptr == nullptr){
+        ptr = new fruta;
+        ptr->key = k;
+        ptr->esq = nullptr;
+        ptr->dir = nullptr;
+        return ptr;
+    } 
+
+    fruta* node = new fruta;
+    node->key = root->key;
+
+    if(k < root->key){
+        node->esq = insert_persistent(root->esq,k);
+        node->dir = root->dir;
+    }
+    else{
+        node->esq = root->esq;
+        node->dir = insert_persistent(root->dir,k);
+    }
+
+    return node;
+}
+
 
 
 int main(void){
