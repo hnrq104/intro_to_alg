@@ -103,6 +103,8 @@ void printa_assoc(vector<vector<int>> sol, int i, int j){
 }
 
 int main(void){
+    /*
+    //exemplo livro
 
     vector<int> p = {30,35,15,5,10,20,25};
     ret r = matrix_associaton(p);
@@ -110,6 +112,16 @@ int main(void){
 
     printa_assoc(r.answer,0,5);
     std::cout << std::endl;
+    */
+
+    /*exercicio 15.2-1*/
+    vector<int> e = {5,10,3,12,5,50,6};
+    ret s = matrix_associaton(e);
+    std::cout << "melhor custo = " << s.table.at(0).at(e.size() - 2) << std::endl;
+    printa_assoc(s.answer,0,e.size() - 2);
+    std::cout << std::endl;
+
+    
 
     return 0;
 }
