@@ -102,6 +102,16 @@ void printa_assoc(vector<vector<int>> sol, int i, int j){
     
 }
 
+/*
+matrix matrix_chain_multiply(A,s,i,j){
+    if(i = j) return A[i];0
+    int k = s[i][j];
+    return matrix_chain_multiply(A,s,i,k-1) X matrix_chain_multiply(A,s,k,j);
+}
+
+
+*/
+
 int main(void){
     /*
     //exemplo livro
@@ -115,7 +125,7 @@ int main(void){
     */
 
     /*exercicio 15.2-1*/
-    vector<int> e = {5,10,3,12,5,50,6};
+    vector<int> e = {1,2,3,4,5,6};
     ret s = matrix_associaton(e);
     std::cout << "melhor custo = " << s.table.at(0).at(e.size() - 2) << std::endl;
     printa_assoc(s.answer,0,e.size() - 2);
