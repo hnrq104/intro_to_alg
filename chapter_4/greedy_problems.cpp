@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <vector>
 
 using namespace std;
 
@@ -33,13 +34,22 @@ bool comp_task(task a, task b){
 /*16.2*/
 double schedule(vector<task> v){
     sort(v.begin(),v.end(),comp_task);
-    vector<int> completion;
+    // vector<int> completion;
     // completion.push_back(0);
     int sum = 0;
-    int avarage_sum;
+    int avarage_sum = 0;
     for(uint i = 0; i < v.size(); i++){
         sum += v.at(i).pi;
         avarage_sum += sum;
     }
     return avarage_sum/v.size();
 }
+
+vector<int> off_cache(vector<int> requests,uint k){
+    vector<int> decisions;
+    
+
+
+}
+
+
