@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <set>
 #include <vector>
 
 using namespace std;
@@ -45,8 +46,44 @@ double schedule(vector<task> v){
     return avarage_sum/v.size();
 }
 
+
+//logk*n^2 
 vector<int> off_cache(vector<int> requests,uint k){
     vector<int> decisions;
+    set<int> cache;
+    uint occupied = 0;
+    //many ways to make this better
+    
+    for(uint i = 0; i < requests.size(); i++){
+        //cache hit
+        if(cache.count(requests.at(i))) continue;
+
+        //there's space in cache
+        if(occupied < k){
+            cache.insert(requests.at(i));
+            occupied++;
+            continue;
+        }
+
+        //find furthest
+        uint distance = 0;
+        uint furthest = 0;
+
+        for(uint j = i + 1; j < requests.size(); j++){
+            if(cache.count(requests.at(j))){
+                if(j > distance){
+                    distance = j;
+                    furthest = requests.at(j);
+                }
+            }
+        }
+
+        occupied--;
+        cache.erase(furthest);
+        decisions.push_back(furthest);
+    }
+
+    return decisions;
     
 
 
