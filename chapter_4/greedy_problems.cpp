@@ -47,7 +47,7 @@ double schedule(vector<task> v){
 }
 
 
-//logk*n^2 
+//logkn^2 really bad 
 vector<int> off_cache(vector<int> requests,uint k){
     vector<int> decisions;
     set<int> cache;
@@ -84,9 +84,6 @@ vector<int> off_cache(vector<int> requests,uint k){
     }
 
     return decisions;
-    
-
-
 }
 
 
