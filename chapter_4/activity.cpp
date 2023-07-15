@@ -139,7 +139,6 @@ int main(void){
         std::cout << resp.at(i) << " ";
     }
     std::cout<<std::endl;
-
     
     return 0;
 }
