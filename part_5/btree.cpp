@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <cstddef>
 #include <utility>
+#include <vector>
 
 /*18.1
 
@@ -49,6 +50,7 @@ struct btree{
     void split_child(bnode *x, int i);
     void insert(int k);
     void inset_nonfull(bnode* r, int k);
+    bool delete_key(bnode* x,int k);
 };
 
 
@@ -206,5 +208,129 @@ void btree::inset_nonfull(bnode* x, int k){
 /*
 18.2
 18.2-1
+draw
+18.2-2
+i don't think redundant calls are made will check
+18.2-3
+go furthest to the left.
 
+predecessor:
+closest ancestor youre part of the right branch
+check in the node aswell
+rightmost child of left branch
+
+18.2-4
+...
+...
+
+18.2-6
+binary search takes will take log_2(t)
+we will have in general search taking
+log_2(t) * log_t(n) = (log t/ log 2)*(log n /log t)
+but this is precisely log(n)
+
+18.2-7 no idea
 */
+
+
+/*18.3-2 don't think i will do it right*/
+
+bool btree::delete_key(bnode* x, int k){
+    int i = 0;
+    bool found = false;
+    /*try to find k in node*/
+    for(int i = 0; i < x->keys.size(); i++){
+        if(x->keys.at(i) == k){
+            found = true;
+            break;
+        }
+        if(x->keys.at(i) > k) break;
+    }
+    /*case 1 
+    if k is in node x and x is a leaf, delete key k
+    */
+    if(found && x->leaf){
+        x->keys.erase(x->keys.begin() + i);
+        return true;
+    }
+
+    /*if k is in node x but is not a leaf*/
+    if(found){
+        if(x->pointers.at(i)->size >= t){
+            bnode* pre = x->pointers.at(i);
+            while(!pre->pointers.empty()){
+                pre = pre->pointers.back();
+            }
+            int num = pre->keys.back();
+            delete_key(x->pointers.at(i), num);
+            x->keys.at(i) = num;
+            //delete predecessor at this subtree
+            //can find k' and delete it with a single pass,
+            //but it's would involve rewriting delete func
+            //exchange it with k
+            return true;
+        }
+
+
+        if(x->pointers.at(i+1)->size >= t){
+            bnode* pre = x->pointers.at(i+1);
+            while(!pre->pointers.empty()){
+                pre = pre->pointers.front();
+            }
+            int num = pre->keys.front();
+            delete_key(x->pointers.at(i), num);
+            x->keys.at(i) = num;
+            //delete sucessor at this subtree
+            //can find k' and delete it with a single pass,
+            //but it's would involve rewriting delete func
+            //exchange it with k
+            return true;
+        }
+
+        else{
+            //merge both nodes and remove recursevely from merged
+            bnode* y = x->pointers.at(i);
+            y->keys.push_back(k);
+            bnode* z = x->pointers.at(i+1);
+            for(int j = 0; j < z->keys.size(); j++){
+                y->keys.push_back(z->keys.at(j));
+                y->pointers.push_back(z->pointers.at(j));
+            }
+            y->pointers.push_back(z->pointers.back());
+            delete z;
+            x->keys.erase(x->keys.begin() + i);
+            x->pointers.erase(x->pointers.begin() + i + 1);
+            delete_key(y,k);
+
+        }
+
+    }
+
+    /*case 3 i am too lazy :()*/    
+    if(!found && x->leaf) return false; /*didn't find it*/
+
+    /*not found but we are in an internal node*/
+    if(x->pointers.at(i)->size > t-1){
+        delete_key(x->pointers.at(i),k);
+    }
+
+    //else
+
+    std::vector<bnode*> sib;
+    bnode* big = nullptr;
+    if(i != 0){
+        sib.push_back(x->pointers.at(i-1));
+        if(sib.back()->size != t-1){
+            big = sib.back();
+        }
+    }
+    if(i != t-2){
+        sib.push_back(x->pointers.at(t-1));
+        
+    }
+
+    
+
+
+
+}
