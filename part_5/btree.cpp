@@ -316,20 +316,19 @@ bool btree::delete_key(bnode* x, int k){
 
     //else
 
-    std::vector<bnode*> sib;
-    bnode* big = nullptr;
-    if(i != 0){
-        sib.push_back(x->pointers.at(i-1));
-        if(sib.back()->size != t-1){
-            big = sib.back();
-        }
+    bnode* prev_sib = nullptr;
+    if(i!=0){
+        prev_sib = x->pointers.at(i-1);
     }
-    if(i != t-2){
-        sib.push_back(x->pointers.at(t-1));
-        
+    bnode* next_sib = nullptr;
+    if(i!=t-1){
+        prev_sib = x->pointers.at(i+1);
     }
 
-    
+    if(prev_sib->size > t-1){
+        //tired
+    }
+    //might do it later, but not realistic
 
 
 
