@@ -302,6 +302,7 @@ bool btree::delete_key(bnode* x, int k){
             x->pointers.erase(x->pointers.begin() + i + 1);
             delete_key(y,k);
 
+            return true;
         }
 
     }
@@ -311,7 +312,7 @@ bool btree::delete_key(bnode* x, int k){
 
     /*not found but we are in an internal node*/
     if(x->pointers.at(i)->size > t-1){
-        delete_key(x->pointers.at(i),k);
+        return delete_key(x->pointers.at(i),k);
     }
 
     //else
@@ -331,5 +332,5 @@ bool btree::delete_key(bnode* x, int k){
     //might do it later, but not realistic
 
 
-
+    return false;
 }
