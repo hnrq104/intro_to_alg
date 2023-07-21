@@ -12,6 +12,9 @@ struct node{
     node* child;
     bool mark; // if it has lost a child since subjugation
 
+    node(int k){
+        key = k;
+    }
 };
 
 struct heap{
@@ -83,21 +86,14 @@ struct heap{
     }
 
     void consolidate(){
-        node* ptr;
         /*while i cant calculate dn we will take d(n) to discover how many there are*/
-        int size;
-        if(ptr == nullptr){
-            size = 0;
+        int size = 1;
+        node* ptr = min->r;
+        while(ptr != min){ //full circle
+            size++;
+            ptr = ptr->r;
         }
-        else{
-            size = 1;
-            ptr = min->r;
-            while(ptr != min){ //full circle
-                size++;
-                ptr = ptr->r;
-            }
-        }
-        
+
         std::vector<node*> a(size,nullptr);
         for(int i = 0; i < size; i++){
             node* next = ptr->r;
@@ -105,10 +101,9 @@ struct heap{
 
             x->r->l = x->l;
             x->l->r = x->r;
-            x->l = nullptr;
-            x->r = nullptr;
+            x->l = x;
+            x->r = x;
             int d = x->deegre;
-
             while(a.at(d) != nullptr){
                 x = fib_heap_link(x,a.at(d));
                 a.at(d) = nullptr;
@@ -116,11 +111,12 @@ struct heap{
             }
             a.at(d) = x;
 
+            if(ptr == next) break;
             ptr = next;
         }
 
         min = nullptr;
-        for(uint i = 0; i < size; i++){
+        for(int i = 0; i < size; i++){
             if(a.at(i) != nullptr){
                 if(min == nullptr){
                     min = a.at(i);
@@ -212,4 +208,18 @@ heap fib_heap_union(heap h1, heap h2){
 
 }
 
+int main(void){
+    heap h;
+    
+    std::vector<int> keys = {10,20,15,12,17,9};
+    std::cout << "starting insertion:" << std::endl;
+    for(uint i = 0; i < keys.size(); i++){
+        h.insert(new node(keys.at(i)));
+    }
+    std::cout << "inserted key items:" << std::endl;
 
+    std::cout << "extracting min" << std::endl;
+    node* ptr = h.extract_min();
+    std::cout << ptr->key << std::endl;
+    return 0;
+}
