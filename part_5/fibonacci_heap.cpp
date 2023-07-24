@@ -221,5 +221,10 @@ int main(void){
     std::cout << "extracting min" << std::endl;
     node* ptr = h.extract_min();
     std::cout << ptr->key << std::endl;
+    
+    std::cout << "extracting min second time" << std::endl;
+    ptr = h.extract_min();
+    std::cout << ptr->key << std::endl;
+    
     return 0;
 }
