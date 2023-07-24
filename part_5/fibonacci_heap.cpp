@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
 #include <cstddef>
+#include <cstdint>
+#include <stdexcept>
 
 //lazy evaluation it seems
 
@@ -173,7 +175,60 @@ struct heap{
         n--;
 
         return z;
+    }
+    
+    /*y has to be x parent*/
+    void cut(node* x, node* y){
+        /*remove x from y list*/
+        if(y->deegre == 1){ //x is y's only child
+            y->child = nullptr;
+        }
+        else{
+            y->child = x->r;
+            x->l->r = x->r;
+            x->r->l = x->l;
+        }
+        y->deegre--;
 
+        /*add x to root list*/
+        x->p = nullptr;
+        x->l = min->l;
+        x->r = min;
+        min->l = x;
+        x->l->r = x;
+
+        x->mark = false;
+    }
+
+    void cascading_cut(node* y){
+        // node* z = y->p;
+        if(y->p != nullptr){
+            if(y->mark == false){
+                y->mark = true;
+            }
+            else{
+                cut(y,y->p); //i particularly dont like calling it z
+                cascading_cut(y->p);
+            }
+        }
+    }
+
+    void decrease_key(node* x, int k){
+        if(k>x->key) throw std::invalid_argument("new key is greater than current");
+        x->key = k;
+        node* y = x->p;
+        if(y!= nullptr && x->key < y->key){
+            cut(x,y);
+            cascading_cut(y);
+        }
+        if(x->key < min->key){
+            min = x;
+        }
+    }
+
+    void delete_node(node*x){
+        decrease_key(x, INT32_MIN);
+        extract_min();
     }
 
 };
@@ -228,3 +283,11 @@ int main(void){
     
     return 0;
 }
+
+/*
+19.3
+
+19.3-1 you might extract a node, making an already marked node into a new root
+because it might never me linked below another, it would still be marked
+
+*/
