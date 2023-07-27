@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
 #include <cmath>
+#include <cstddef>
+#include <vector>
 
 /*van emde boas*/
 /*20.1
@@ -295,3 +297,94 @@ void vEB_insert(vEB* V, int x){
         }
     }
 }
+
+void vEB_delete(vEB* V, int x){
+    if(V->min == V->max){
+        V->min = -1;
+        V->max = -1;
+    }
+    else if(V->u == 2){
+        if(x == 0){
+            V->min = 1;
+        }
+        else{
+            V->min = 0;
+        }
+        V->max = V->min;
+    }
+
+    else{
+        if(x==V->min){
+            int first_cluster = vEB_min(V->summary);
+            x = index(first_cluster,vEB_min(V->cluster.at(first_cluster)),V->u);
+            V->min = x;
+        }
+
+        vEB_delete(V->cluster.at(high(x,V->u)), low(x,V->u));
+        if(vEB_min(V->cluster.at(high(x,V->u))) == -1){
+            vEB_delete(V->summary, high(x, V->u));
+            if(x==V->max){
+                int summary_max = vEB_max(V->summary);
+                if(summary_max == -1){
+                    V->max = V->min; /**/
+                }
+                else{
+                    V->max = index(summary_max,vEB_max(V->cluster.at(summary_max)),V->u);
+                }
+            }
+        }
+
+        else if (x ==V->max) {
+            int h = high(x,V->u);
+            V->max = index(h,vEB_max(V->cluster.at(h)),V->u);
+        }
+    }
+}
+
+/*20.3 question
+20.3-1 save how many times an element appears
+20.3-2 save pointers associated with elements
+*/
+/*20.3-3*/
+vEB* create_veb(int u){
+    if(u == 2){
+        vEB* v = new vEB;
+        v->u = 2;
+        v->min = -1;
+        v->max = -1;
+        v->summary = nullptr; 
+        return v;
+    }
+    vEB* v = new vEB;
+    v->cluster.resize(upper_sqrt(u));
+    for(int i = 0; i < upper_sqrt(u); i++){
+        v->cluster.at(i) = create_veb(lower_sqrt(u));
+    }
+    v->summary = create_veb(lower_sqrt(u));
+    
+    v->u = u;
+    v->min = -1;
+    v->max = -1;
+    
+    return v;
+}
+
+/*20.3-4
+
+it will go thru the same process, but setting won't do anything on base case
+and a 0 to a 0 (in delete case)
+
+keep an auxialiary array A[u] keeping track of elements
+
+20.3-5
+
+now the functions look something like
+T(u) = T(u^1/k) + O(1)
+
+which is precisely the same
+
+20.3-6
+u/lglg(u)
+but really, this times any constant
+
+*/
