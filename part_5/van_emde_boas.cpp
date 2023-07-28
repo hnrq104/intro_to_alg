@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-#include <cmath>
-#include <cstddef>
-#include <vector>
 
 /*van emde boas*/
 /*20.1
