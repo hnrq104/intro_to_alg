@@ -3,9 +3,13 @@
 struct node{
     uint vertex;
     node* next;
+    uint parent;
+    uint time;
+    bool color;
 
     node(){
         next = nullptr;
+        color = false;
     }
 
 };
@@ -218,18 +222,45 @@ int diamater(std::vector<node> tree){
 
     return distances.at(num);
 }
-/*
-int main(void){
-    std::vector<int> a{1,2,3,4,5};
-    for(auto &itr : a){ //interesting
-        itr = 0;
-        std::cout << itr << " ";
 
+/*i could have made t a refernce value, which would be considerably easier, but this is just cooler*/
+/*i will comment the changes anyway*/
+int dfs_visit(uint source,std::vector<node> &tree,std::vector<node> adj, uint /*&*/t){
+    tree.at(source).color = true;
+    tree.at(source).time = t;
+
+    node* ptr = adj.at(source).next;
+    /*t++*/
+    while(ptr!=nullptr){
+        if(!tree.at(ptr->vertex).color){
+            node* element = new node;
+            element->vertex = ptr->vertex;
+            element->next = tree.at(source).next;
+            tree.at(source).next = element;
+            tree.at(ptr->vertex).parent = source;
+            t = dfs_visit(ptr->vertex,tree,adj,t+1);
+            /*dfs_visit(ptr->vertex,tree,adj,t)*/
+        }
     }
-    std::cout << std::endl;
-    for(auto itr : a){
-        std::cout << itr << " ";
-    }
-    return 0;
+    /*no return*/
+    return t;
 }
-*/
+
+
+std::vector<node> dfs(std::vector<node> adj){
+    std::vector<node> deep_tree = adj;
+    for(auto &itr: deep_tree){ /*testing this, but i don't like it*/
+        itr.color = false;
+        itr.next = nullptr;
+    }
+    int t = 0;
+    for(int i = 0; i < deep_tree.size(); i++){
+        if(!deep_tree.at(i).color){
+            t = dfs_visit(i,deep_tree,adj,t);
+            t++;
+        }
+    }
+
+    return deep_tree;
+    
+}
