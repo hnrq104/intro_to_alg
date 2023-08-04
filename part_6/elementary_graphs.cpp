@@ -4,7 +4,8 @@ struct node{
     uint vertex;
     node* next;
     uint parent;
-    uint time;
+    uint d;
+    uint f;
     bool color;
 
     node(){
@@ -227,7 +228,7 @@ int diamater(std::vector<node> tree){
 /*i will comment the changes anyway*/
 int dfs_visit(uint source,std::vector<node> &tree,std::vector<node> adj, uint /*&*/t){
     tree.at(source).color = true;
-    tree.at(source).time = t;
+    tree.at(source).d = t;
 
     node* ptr = adj.at(source).next;
     /*t++*/
@@ -243,6 +244,7 @@ int dfs_visit(uint source,std::vector<node> &tree,std::vector<node> adj, uint /*
         }
     }
     /*no return*/
+    tree.at(source).f = t;
     return t;
 }
 
@@ -263,4 +265,49 @@ std::vector<node> dfs(std::vector<node> adj){
 
     return deep_tree;
     
+}
+
+/*i may need gray color here thinking
+or initialize final time to something else*/
+std::vector<node> dfs_iteractive(std::vector<node> adj){
+    std::vector<node> deep_tree = adj;
+    for(uint i = 0; i < deep_tree.size(); i++){
+        deep_tree.at(i).color = false;
+        deep_tree.at(i).next = nullptr;
+        deep_tree.at(i).f = -1;
+    }
+
+    std::stack<int> next;
+    uint t = 0;
+    for(uint i = 0; i < deep_tree.size(); i++){
+        if(!deep_tree.at(i).color){
+            next.push(i);
+
+            while(!next.empty()){
+                int num = next.top();
+                if(deep_tree.at(num).color){
+                    if(deep_tree.at(num).f == -1){
+                        deep_tree.at(num).f = t;
+                        t++;
+                    }
+                    next.pop();
+                }
+
+                else{
+                    deep_tree.at(num).color = true;
+                    deep_tree.at(num).d = t;
+                    node* ptr = adj.at(num).next;
+
+                    while(ptr!= nullptr){
+                        if(!deep_tree.at(ptr->vertex).color){
+                            next.push(ptr->vertex);
+                        }
+                    }
+                    t++;
+                }
+
+            }
+        }
+    }
+
 }
