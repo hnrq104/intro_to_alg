@@ -14,7 +14,10 @@ struct node{
     }
 
 };
+/*chapter 22.1*/
 
+/*a simplified graph is one that contains no self loops or equal edges
+this is exercise 22.1-4*/
 std::vector<node> simplified_graph(std::vector<node> &multigraph){
     std::vector<uint> last(multigraph.size());
     std::vector<node> simplified(multigraph.size());
@@ -39,9 +42,8 @@ std::vector<node> simplified_graph(std::vector<node> &multigraph){
 /*i will represent a adjacency-matrix by a matrix*/
 
 
-/*exercise 22.1-4*/
 /*similar to before, but we go into each edge looking for unconnected vertices*/
-
+/*22.1-5*/
 std::vector<node> square_graph(std::vector<node> &directedgraph){
     std::vector<uint> last(directedgraph.size());
     std::vector<node> square(directedgraph.size());
@@ -82,6 +84,10 @@ std::vector<node> square_graph(std::vector<node> &directedgraph){
 
 /*to determine squareG we just have to square the matrix which is a bit crazy to think about*/
  
+
+/*chapter 22.2*/
+
+
 struct sol{
     std::vector<int> distances;
     std::vector<int> parent;
@@ -161,6 +167,7 @@ std::vector<bool> baby_face(std::vector<node> adj){
     return color;
 }
 
+/*22.2-8*/
 int diamater_a_bit_slow(std::vector<node> adj){
     /*could do bfs twice and return farthest note, which is the easiest*/
     sol s = bfs(adj,0);
@@ -178,6 +185,7 @@ int diamater_a_bit_slow(std::vector<node> adj){
     /*this is not much productive and allocates a lot of unnecessary space*/
 }
 
+/*22.2-8*/
 int diamater(std::vector<node> tree){
     std::vector<bool> visited(tree.size(), false);
     /*start at 0*/
@@ -224,6 +232,9 @@ int diamater(std::vector<node> tree){
     return distances.at(num);
 }
 
+/*chapter 22.3*/
+
+
 /*i could have made t a refernce value, which would be considerably easier, but this is just cooler*/
 /*i will comment the changes anyway*/
 int dfs_visit(uint source,std::vector<node> &tree,std::vector<node> adj, uint /*&*/t){
@@ -267,8 +278,12 @@ std::vector<node> dfs(std::vector<node> adj){
     
 }
 
-/*i may need gray color here thinking
-or initialize final time to something else*/
+/*
+22.3-7
+i may need gray color here thinking
+or initialize final time to something else
+*/
+
 std::vector<node> dfs_iteractive(std::vector<node> adj){
     std::vector<node> deep_tree = adj;
     for(uint i = 0; i < deep_tree.size(); i++){
@@ -310,4 +325,55 @@ std::vector<node> dfs_iteractive(std::vector<node> adj){
         }
     }
 
+    return deep_tree;
 }
+
+
+/*22.3-13
+if i'm not mistaken, do a dfs, expect to find only white verteces
+*/
+
+
+
+/*chapter 22.4*/
+
+void topological_recursion(uint i,std::vector<node> &adj, node* &list_head){
+    adj.at(i).color = true;
+    
+    node* ptr = adj.at(i).next;
+    while(ptr!=nullptr){
+        if(!adj.at(ptr->vertex).color){
+            topological_recursion(ptr->vertex,adj,list_head);
+        }
+    }
+
+    node* number = new node;
+    number->vertex = i;
+    number->next = list_head->next;
+    list_head->next = number;
+}
+
+
+/*this returns a linked list which only numbers matter, i'm using the node structure here
+but i shouldn't really. As it's not really important right now, i could revisit it in the future*/
+node* topological_sort(std::vector<node> adj){
+    /*this is the smae as dfs but we keep track of finished nodes*/
+    node* list_head  = new node;
+    
+    /*i don't really need to keep track of time here, only the order each node is finished*/
+    /*as so i will not create a new list, on the assumption we have visited the nodes*/
+    /*adj was called using the copy_constructor*/
+    for(uint i = 0; i < adj.size(); i++){
+        adj.at(i).color = false;
+    }
+
+    for(uint i = 0; i < adj.size(); i++){
+        if(!adj.at(i).color){
+            topological_recursion(i,adj,list_head);
+        }
+    }
+
+    return list_head->next;
+
+}
+
