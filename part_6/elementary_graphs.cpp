@@ -382,10 +382,33 @@ node* topological_sort(std::vector<node> adj){
 
 }
 
+/*this does too many recursions, and redo too many paths, we must keep track of how many
+paths there are between a and b*/
+uint paths(std::vector<node> adj, std::vector<uint> pos,std::vector<uint> &numbers ,uint a, uint b){
+    if(numbers.at(a) != UINT_MAX) return numbers.at(a);
+    
+    if(pos.at(a) > pos.at(b)) numbers.at(a) = 0;
+    
+    else if(a == b) numbers.at(a) = 1;
+    
+    else{
+        node* ptr = adj.at(a).next;
+
+        while(ptr!=nullptr){
+            numbers.at(a) += paths(adj,pos,numbers,ptr->vertex,b);
+            ptr = ptr->next;
+        }
+    }
+
+    return numbers.at(a);
+}
+
 /*22.4-2*/
+/*explanation on notebook, i really liekd this one*/
 uint count_paths(std::vector<node> adj, uint a, uint b){
     node* sort = topological_sort(adj);
     std::vector<uint> position(adj.size());
+    std::vector<uint> numbers(adj.size(),UINT32_MAX);
 
     node* ptr = sort;
     uint j = 0;
@@ -396,4 +419,9 @@ uint count_paths(std::vector<node> adj, uint a, uint b){
         ptr = ptr->next;
     }
 
+    paths(adj,position,numbers,a,b);
+    return numbers.at(a);
 }
+
+/*22.4-5
+done by Claudson in class, implemented before*/
