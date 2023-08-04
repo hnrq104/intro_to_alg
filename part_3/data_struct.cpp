@@ -44,7 +44,7 @@ int os_rank(fruta* x){
     int r = size(x->left) + 1;
     fruta* y = x;
     while(y->p != nullptr){
-        if(y = y->p->right){
+        if(y == y->p->right){
             r = r + size(y->p->left) + 1;
         }
         y = y->p;

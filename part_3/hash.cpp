@@ -77,7 +77,7 @@ struct open_addressing{
     open_addressing(int n){
         keys.resize(n);
         for(int i = 0; i < n; i++){
-            keys.at(i) == nullptr;
+            keys.at(i) = nullptr;
         }
     }
 
