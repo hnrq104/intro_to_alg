@@ -202,6 +202,7 @@ int diamater(std::vector<node> tree){
             if(!visited.at(ptr->vertex)){
                 q.push(ptr->vertex);
             }
+            ptr = ptr->next;
         }
     }
 
@@ -226,6 +227,7 @@ int diamater(std::vector<node> tree){
                 visited.at(ptr->vertex) = true;
                 q.push(ptr->vertex);
             }
+            ptr = ptr->next;
         }
     }
 
@@ -253,6 +255,7 @@ int dfs_visit(uint source,std::vector<node> &tree,std::vector<node> adj, uint /*
             t = dfs_visit(ptr->vertex,tree,adj,t+1);
             /*dfs_visit(ptr->vertex,tree,adj,t)*/
         }
+        ptr = ptr->next;
     }
     /*no return*/
     tree.at(source).f = t;
@@ -317,6 +320,7 @@ std::vector<node> dfs_iteractive(std::vector<node> adj){
                         if(!deep_tree.at(ptr->vertex).color){
                             next.push(ptr->vertex);
                         }
+                        ptr = ptr->next;
                     }
                     t++;
                 }
@@ -345,6 +349,7 @@ void topological_recursion(uint i,std::vector<node> &adj, node* &list_head){
         if(!adj.at(ptr->vertex).color){
             topological_recursion(ptr->vertex,adj,list_head);
         }
+        ptr = ptr->next;
     }
 
     node* number = new node;
@@ -377,3 +382,18 @@ node* topological_sort(std::vector<node> adj){
 
 }
 
+/*22.4-2*/
+uint count_paths(std::vector<node> adj, uint a, uint b){
+    node* sort = topological_sort(adj);
+    std::vector<uint> position(adj.size());
+
+    node* ptr = sort;
+    uint j = 0;
+
+    while(ptr!=nullptr){
+        position.at(ptr->vertex) = j;
+        j++;
+        ptr = ptr->next;
+    }
+
+}
