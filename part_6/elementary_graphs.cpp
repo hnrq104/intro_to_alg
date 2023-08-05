@@ -425,3 +425,49 @@ uint count_paths(std::vector<node> adj, uint a, uint b){
 
 /*22.4-5
 done by Claudson in class, implemented before*/
+
+/*22.5
+strongly connected components*/
+
+/*using reference to avoid unnecessary mem locking*/
+std::vector<node> transpose_graph(std::vector<node> &adj){
+    std::vector<node> transpose(adj.size());
+
+    for(uint i = 0; i < adj.size(); i++){
+        node* ptr = adj.at(i).next;
+        while(ptr!=nullptr){
+            node* t_edge = new node;
+            t_edge->vertex = i;
+            t_edge->next = transpose.at(ptr->vertex).next;
+            transpose.at(ptr->vertex).next = t_edge;
+
+            ptr = ptr->next;
+        }
+    }
+    return transpose;
+}
+
+std::vector<node> strongly_connected(std::vector<node> adj){
+    node* list = topological_sort(adj);
+    node* ptr = list;
+
+    std::vector<node> forest(adj.size());
+    
+    for(uint i = 0; i < forest.size(); i++){
+        forest.at(i).color = false;
+        forest.at(i).next = nullptr;
+    }
+    
+    std::vector<node> transpose = transpose_graph(adj);
+
+    int t = 0;
+    while(ptr != nullptr){
+        if(!forest.at(ptr->vertex).color){
+            t = dfs_visit(ptr->vertex,forest,transpose,t);
+            t++;
+        }
+    }
+
+    return forest;
+    
+}
