@@ -346,7 +346,7 @@ void topological_recursion(uint i,std::vector<node> &adj, node* &list_head){
     
     node* ptr = adj.at(i).next;
     while(ptr!=nullptr){
-        if(!adj.at(ptr->vertex).color){
+        if(!adj.at(ptr->vertex).color){ /*in a dag this is always true, as there are no cycles*/
             topological_recursion(ptr->vertex,adj,list_head);
         }
         ptr = ptr->next;
@@ -468,6 +468,95 @@ std::vector<node> strongly_connected(std::vector<node> adj){
         }
     }
 
-    return forest;
+    return forest; /*this is a forest*/
     
+}
+
+/*22.5-5*/
+/*i'll make an auxialiary dfs, one such I just know which component each vertex belongs to*/
+
+void component_graph_aux(uint source, uint &set,std::vector<node> &adj, std::vector<uint> &trees){
+    adj.at(source).color = true;
+    trees.at(source) = set;
+
+    node* ptr = adj.at(source).next;
+    while(ptr!=nullptr){
+        if(!adj.at(ptr->vertex).color){
+            component_graph_aux(ptr->vertex,set,adj,trees);
+        }
+    }
+}
+
+std::vector<node> component_graph(std::vector<node> adj){
+    node* list = topological_sort(adj);
+    std::vector<node> transpose = transpose_graph(adj);
+    for(uint i = 0; i < transpose.size(); i++){
+        transpose.at(i).color = false;
+    }
+
+    /*instead of making a forest, we just need to know to which component each belongs*/
+    node* ptr = list;
+    std::vector<uint> sets(adj.size(),-1);
+    uint j = 0;
+    while(ptr!=nullptr){
+        if(!transpose.at(ptr->vertex).color){
+            component_graph_aux(ptr->vertex,j,transpose, sets);
+            j++;
+        }
+        ptr = ptr->next;
+    }
+
+    /*this is a bit dumb, as i'm not telling which vertices belogn to which components*/
+
+    /*create component graph*/
+    std::vector<node> scc(j);
+
+    /*go thru each edge, adding it to scc if it doesn't connect same components*/
+    for(uint i = 0; i < adj.size(); i++){
+        node* edges = adj.at(i).next;
+        while(edges != nullptr){
+            if(sets.at(i) != sets.at(edges->vertex)){ /*edge does not connect same strong connected component*/
+                /*create new edge in scc graph*/
+                node* connection = new node;
+                connection->vertex = sets.at(edges->vertex);
+                connection->next = scc.at(sets.at(i)).next;
+                scc.at(sets.at(i)).next = connection;
+            }
+
+            edges = edges->next;
+        }
+    }
+
+    /*remove unnecessary edges
+    this here could be optimized, but i'm lazy lol*/
+    return simplified_graph(scc);
+}
+
+/*22.5-6
+do almost the same as before, but make cycles out of strongly components,
+connect components as needed later*/
+
+/*22.5-7 this one is a bit smarter, couldn't really solve myself
+get the component set, topological it, because it's a dag. We need that every component is connected to the one after
+suppose Ck isn't connected to Ck+1, then there's no path from Ck to Ck+1 and certainly no path from Ck+1 to Ck. So it couldn't be
+semi connected
+*/
+
+bool semiconnected(std::vector<node> &adj){
+    std::vector<node> component = component_graph(adj);
+    node* ptr = topological_sort(component);
+    while(ptr->next != nullptr){
+        node* edges = component.at(ptr->vertex).next;
+        bool found = false;
+        while(edges != nullptr){
+            if(edges->vertex == ptr->next->vertex){
+                found = true;
+                break;
+            }
+            edges = edges->next;
+        }
+        if(!found) return false;
+        ptr = ptr->next;
+    }
+    return true;
 }
