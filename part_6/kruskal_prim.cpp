@@ -89,6 +89,30 @@ std::vector<edge> kruskal(std::vector<edge> edges){
 
 /*need fibonacci heap for prim should I rewrite it?*/
 
+/*PRIM
+
+MST_PRIM(G,w,r){ 
+    for each u in G.V
+        u.key = INFTY
+        u.p = nullptr
+    
+    r.key = 0
+    Q = G.V
+
+    while(Q != empty set)
+        u = ExtractMin(Q)
+        for each v in G.adj[u]
+            if v in Q and w(u,v) < v.key
+                v.p = u
+                v.key = w(u,v)
+}
+*/
+
+/* i will make it without a fib heap, which is bad, because i will write
+it with lazy evaluation*/
+
+/*will use list*/
+
 int main(void){
     std::vector<edge> minheap;
     minheap.push_back(edge(0,0,5));
