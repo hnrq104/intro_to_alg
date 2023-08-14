@@ -28,6 +28,17 @@ struct heap{
         min = nullptr;
     }
 
+    void print_root_list(void){
+        if(min == nullptr) return;
+        
+        node* ptr = min;
+        do{
+            std::cout << ptr->key << std::endl;
+            ptr = ptr->l;
+        }while(ptr != min);
+        
+    }
+
     void insert(node* x){
         x->deegre = 0;
         x->p = nullptr;
@@ -42,11 +53,11 @@ struct heap{
 
         else{
             /*add x to double linked list
-            i will add to right of min
+            i will add to the left of min
             */
+            x->r = min;
             x->l = min->l;
             min->l = x;
-            x->r = min;
             x->l->r = x;
 
             if(x->key < min->key){
@@ -130,7 +141,7 @@ struct heap{
                     a.at(i)->l = min->l;
                     a.at(i)->r = min;
                     min->l = a.at(i);
-                    min->l->r = a.at(i);
+                    a.at(i)->l->r = a.at(i);
 
                     if(a.at(i)->key < min->key){
                         min = a.at(i);
@@ -166,6 +177,7 @@ struct heap{
         z->r->l = z->l;
 
         if(z == z->r){
+            std::cout<< "opa" << std::endl;
             min = nullptr;
         }
         else{
@@ -263,24 +275,68 @@ heap fib_heap_union(heap h1, heap h2){
 
 }
 
+void print_tree(node* pt){
+    std::cout << pt->key;
+
+    if(pt->child != nullptr){
+        node* aux = pt->child;
+        do{
+            std::cout << "(";
+            print_tree(aux);
+            std::cout << ")";
+            aux = aux->r;
+        }while (aux!=pt->child);
+    }
+}
+
 int main(void){
     heap h;
     
-    std::vector<int> keys = {10,20,15,12,17,9};
-    std::cout << "starting insertion:" << std::endl;
-    for(uint i = 0; i < keys.size(); i++){
-        h.insert(new node(keys.at(i)));
-    }
-    std::cout << "inserted key items:" << std::endl;
 
-    std::cout << "extracting min" << std::endl;
-    node* ptr = h.extract_min();
-    std::cout << ptr->key << std::endl;
+    node* ptr = new node(7);
+    node* ptr1 = new node(27);
+
+    h.insert(new node(10));
+    h.insert(new node(29));
+    h.insert(new node(5));
+    h.insert(ptr);
+
+    h.insert(new node(0));
+    h.insert(new node(3));
+    h.insert(new node(2));
+    h.insert(ptr1);
+
+    h.extract_min();
+
+    std::cout << "PRINTING" <<std::endl;
+    h.print_root_list();
+
+    h.decrease_key(ptr1, 1);
+    h.decrease_key(ptr, -5);
+
+    std::cout << "PRINTING" <<std::endl;
+    h.print_root_list();
     
-    std::cout << "extracting min second time" << std::endl;
-    ptr = h.extract_min();
-    std::cout << ptr->key << std::endl;
+    std::cout << "EXTRACTING : " << h.extract_min()->key << std::endl;
+
+    std::cout << "SIZE : " << h.n << std::endl;
+    // std::cout << h.extract_min()->key << std::endl;
+    // std::cout << "PRINTING" <<std::endl;
+    // h.print_root_list();
+    // std::cout << "min deegre :: " <<  h.min->deegre << std::endl;
+    // std::cout << "min-l deegre :: " <<  h.min->l->deegre << std::endl;
+    // std::cout<< "min l = " << h.min->l << " min r = " << h.min->r << std::endl;
+    // std::cout<< "min l key = " << h.min->l->key << " min r key= " << h.min->r->key << std::endl;
+    // std::cout << "MIN TREE : ";
+    // print_tree(h.min);
+    // std::cout << std::endl;
+
+    // h.extract_min();
+    // std::cout << "PRINTING" <<std::endl;
+    // h.print_root_list();
+
     
+
     return 0;
 }
 
