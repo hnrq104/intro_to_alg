@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "fib.hpp"
 
 template<typename T>
 class set{
@@ -10,14 +11,15 @@ class set{
 
     /*i will add id for exercise 21.1 and 21.3*/
     // int id;
+    set(){}
 
-    set(T t){
+    set<T>(T &t){
         element = t;
         parent = this;
         rank = 0;
     }
 
-    set* find_set(void){
+    set<T>* find_set(void){
         if(parent == this){
             return this;
         }
@@ -111,23 +113,89 @@ MST_PRIM(G,w,r){
 /* i will make it without a fib heap, which is bad, because i will write
 it with lazy evaluation*/
 
-/*will use list*/
+struct vertex{
+    int v;
+    int p;
+    double key;
+    
+    bool operator<(vertex &rhs){
+        return key < rhs.key;
+    }
+
+    bool operator>(vertex &rhs){
+        return key > rhs.key;
+    }
+
+    bool operator<=(vertex &rhs){
+        return key <= rhs.key;
+    }
+
+    bool operator>=(vertex &rhs){
+        return key >= rhs.key;
+    }
+};
+
+struct node{
+    uint vertex;
+    node* next;
+    uint parent;
+    uint d; /*i will suppose this is  weight*/
+    uint f;
+    bool color;
+
+    node(){
+        next = nullptr;
+        color = false;
+    }
+
+};
+
+/*this changes the p attribute in each node*/
+void prim(std::vector<node> &G, int r){
+    std::unordered_map<FibNode<double>*, uint> dict;
+    std::vector<FibNode<double>*> list(G.size());
+    for(uint i = 0; i < G.size(); i++){
+        list.at(i) = new FibNode<double>(DBL_MAX);
+        dict.insert(std::make_pair(list.at(i),i));
+    }
+
+    list.at(r)->key = 0;
+    std::vector<bool> in_tree(G.size());
+    /*i will set parents at G*/
+
+    FibonacciHeap<double> Q;
+    for(auto itr:list){
+        Q.insert(itr);
+    }
+
+    while(Q.n>0){
+        FibNode<double> *ptr = Q.extract_min();
+        uint vertex = dict.find(ptr)->second;
+        in_tree.at(vertex) = true;
+
+        node* edges = G.at(vertex).next;
+        while(edges != nullptr){
+            if(!in_tree.at(edges->vertex)){
+                if(edges->d < list.at(edges->vertex)->key){
+                    Q.decrease_key(list.at(edges->vertex), edges->d);
+                    G.at(edges->vertex).parent = vertex;
+                }
+            }
+            edges = edges->next;
+        }
+    }
+    
+}
 
 int main(void){
-    std::vector<edge> minheap;
-    minheap.push_back(edge(0,0,5));
-    minheap.push_back(edge(0,0,10));
-    minheap.push_back(edge(0,0,2));
-    minheap.push_back(edge(0,0,20));
-    minheap.push_back(edge(0,0,-5));
-
-    std::sort(minheap.begin(),minheap.end());
-    
-    for(auto e : minheap){
-        std::cout << e.weight << " ";
+    FibonacciHeap<int> fib;
+    for(int i = 0; i < 10; i++){
+        fib.insert(new FibNode<int>(i));
     }
-    std::cout << std::endl;
 
+    while(fib.n > 0){
+        std::cout << fib.extract_min()->key << std::endl; 
+    }
     return 0;
 }
 
