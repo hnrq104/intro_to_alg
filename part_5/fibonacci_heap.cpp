@@ -102,13 +102,15 @@ struct heap{
         /*while i cant calculate dn we will take d(n) to discover how many there are*/
         int size = 1;
         node* ptr = min->r;
+        int max_deegre = min->deegre;
         while(ptr != min){ //full circle
+            if(ptr->deegre > max_deegre) max_deegre = ptr->deegre;
             size++;
             ptr = ptr->r;
         }
 
-        std::vector<node*> a(size,nullptr);
-        for(int i = 0; i < size; i++){
+        std::vector<node*> a(std::max(size,max_deegre) + 2,nullptr);
+        for(uint i = 0; i < size; i++){
             node* next = ptr->r;
             node* x = ptr;
 
@@ -117,11 +119,14 @@ struct heap{
             x->l = x;
             x->r = x;
             int d = x->deegre;
+            // if(d >= a.size()) a.resize(d+1);
             while(a.at(d) != nullptr){
                 x = fib_heap_link(x,a.at(d));
                 a.at(d) = nullptr;
                 d++;
+                if(d == a.size()) a.push_back(nullptr);
             }
+            
             a.at(d) = x;
 
             if(ptr == next) break;
@@ -129,7 +134,7 @@ struct heap{
         }
 
         min = nullptr;
-        for(int i = 0; i < size; i++){
+        for(uint i = 0; i < a.size(); i++){
             if(a.at(i) != nullptr){
                 if(min == nullptr){
                     min = a.at(i);
@@ -177,7 +182,6 @@ struct heap{
         z->r->l = z->l;
 
         if(z == z->r){
-            std::cout<< "opa" << std::endl;
             min = nullptr;
         }
         else{
@@ -292,50 +296,15 @@ void print_tree(node* pt){
 int main(void){
     heap h;
     
+    for(int i = 0; i < 10; i++){
+        h.insert(new node(i));
+    }
 
-    node* ptr = new node(7);
-    node* ptr1 = new node(27);
+    for(int i = 0; i < 10; i++){
 
-    h.insert(new node(10));
-    h.insert(new node(29));
-    h.insert(new node(5));
-    h.insert(ptr);
+        std::cout << h.extract_min() << std::endl;
+    }
 
-    h.insert(new node(0));
-    h.insert(new node(3));
-    h.insert(new node(2));
-    h.insert(ptr1);
-
-    h.extract_min();
-
-    std::cout << "PRINTING" <<std::endl;
-    h.print_root_list();
-
-    h.decrease_key(ptr1, 1);
-    h.decrease_key(ptr, -5);
-
-    std::cout << "PRINTING" <<std::endl;
-    h.print_root_list();
-    
-    std::cout << "EXTRACTING : " << h.extract_min()->key << std::endl;
-
-    std::cout << "SIZE : " << h.n << std::endl;
-    // std::cout << h.extract_min()->key << std::endl;
-    // std::cout << "PRINTING" <<std::endl;
-    // h.print_root_list();
-    // std::cout << "min deegre :: " <<  h.min->deegre << std::endl;
-    // std::cout << "min-l deegre :: " <<  h.min->l->deegre << std::endl;
-    // std::cout<< "min l = " << h.min->l << " min r = " << h.min->r << std::endl;
-    // std::cout<< "min l key = " << h.min->l->key << " min r key= " << h.min->r->key << std::endl;
-    // std::cout << "MIN TREE : ";
-    // print_tree(h.min);
-    // std::cout << std::endl;
-
-    // h.extract_min();
-    // std::cout << "PRINTING" <<std::endl;
-    // h.print_root_list();
-
-    
 
     return 0;
 }
