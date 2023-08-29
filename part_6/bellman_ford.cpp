@@ -16,7 +16,7 @@ struct node{
 };
 
 void initialize_single_source(std::vector<node> &g, uint s){
-    for(uint i = 0; i < g.size(); i++){
+    for(uint i = 0; i < g   .size(); i++){
         g.at(i).d = DBL_MAX;
         g.at(i).parent = -1;
     }

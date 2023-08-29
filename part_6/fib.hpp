@@ -28,6 +28,10 @@ class FibonacciHeap{
         min = nullptr;
     }
 
+    bool empty(){
+        return n == 0;
+    }
+
     void print_root_list(void){
         if(min == nullptr) return;
         
