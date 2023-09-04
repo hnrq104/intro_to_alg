@@ -42,7 +42,7 @@ bool bellman_ford(std::vector<node> &g, uint source){
             /*get all edges*/
             node* ptr = g.at(i).next;
             while(ptr!=nullptr){
-                change = change || relax(g,i,ptr->vertex,ptr->f);
+                if(relax(g,i,ptr->vertex,ptr->f)) change = true; /*this was insane*/
                 ptr = ptr->next;
             }
         }
