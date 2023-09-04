@@ -37,7 +37,7 @@ vector<vector<double>> extend_shortest_paths(vector<vector<double>> &L, vector<v
 }
 
 template<typename T>
-void print_matrix(vector<vector<T>> L){
+void print_matrix(vector<vector<T>> &L){
     for(vector<T> v : L){
         for(T d : v){
             if(d == DBL_MAX){

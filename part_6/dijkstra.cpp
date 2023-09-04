@@ -64,6 +64,4 @@ void dijkstra(std::vector<node> &g, uint source){
             ptr = ptr->next;
         }
     }
-
-
 }
