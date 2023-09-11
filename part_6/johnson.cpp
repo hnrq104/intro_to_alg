@@ -100,9 +100,6 @@ bool bellman_ford(std::vector<node> &g, uint source){
         node* ptr = g.at(i).next;
         while(ptr!=nullptr){
             if(g.at(ptr->vertex).d > g.at(i).d + ptr->f){
-                cout << "saida : " << i << " d = " << g.at(i).d << endl;
-                cout << "cheada : " << ptr->vertex << " d = " << g.at(ptr->vertex).d << endl;
-                cout << "peso : " << ptr->f << endl; 
 
                 return false;
             }
