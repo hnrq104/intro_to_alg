@@ -6,3 +6,6 @@
 *.exe
 *.o
 *.so
+*.vscode
+*.json
+*.out

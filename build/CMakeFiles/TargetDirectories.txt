@@ -1,0 +1,2 @@
+/home/hq/alg/build/CMakeFiles/edit_cache.dir
+/home/hq/alg/build/CMakeFiles/rebuild_cache.dir
