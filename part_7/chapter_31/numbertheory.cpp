@@ -208,5 +208,7 @@ int main(void){
     }
     std::cout << std::endl;
 
+    std::cout << euclid(814-84,1387) << std::endl;
+
     return 0;
 }

@@ -49,7 +49,7 @@ bool relax(std::vector<node> &g, uint u, uint v, double w){
 /*dijkstra*/
 void dijkstra(std::vector<node> &g, uint source){
     /*i need to associate fibnodes in the heap to intengers*/
-    std::map<FibNode<double>*,uint> hashmap;
+    std::unordered_map<FibNode<double>*,uint> hashmap;
     std::vector<FibNode<double>*> track_of_nodes(g.size());
     FibonacciHeap<double> Q;
 
